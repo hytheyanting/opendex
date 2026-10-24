@@ -310,6 +310,7 @@ export function OnboardingWizard({
             hint="Local options are free + offline (one-time model download)."
             value={config.voiceInput.sttProvider}
             options={[
+              { value: "sensevoice", label: "Ubuntu SenseVoice（中文 · NetBird 内网）" },
               { value: "whisper-local", label: "Local Whisper (free, offline)" },
               { value: "vosk-local", label: "Local Vosk (free, offline)" },
               { value: "openai", label: "OpenAI Whisper (cloud)" },

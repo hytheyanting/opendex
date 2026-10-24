@@ -35,8 +35,12 @@
     "@ai-sdk/xai": "^3.0.104",
     "@elevenlabs/elevenlabs-js": "^2.49.1",
     "@huggingface/transformers": "^4.2.0",
+    "@jimp/custom": "0.22.12",
+    "@jimp/plugins": "0.22.12",
+    "@jimp/types": "0.22.12",
     "@meridius-labs/apple-on-device-ai": "^1.6.2",
     "@nut-tree-fork/nut-js": "^4.2.6",
+    "@opentelemetry/api": "1.9.1",
     "@picovoice/web-voice-processor": "^4.0.10",
     "ai": "^6.0.193",
     "dotenv": "^17.4.2",
@@ -87,6 +91,7 @@
     ],
     "files": [
       "out/**/*",
+      "resources/**/*",
       "package.json"
     ],
     "asarUnpack": [

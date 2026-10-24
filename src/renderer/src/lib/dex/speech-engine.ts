@@ -54,8 +54,9 @@ export class SystemSpeechEngine implements SpeechEngine {
       const match = voices.find((v) => v.voiceURI === this.opts.voiceURI);
       if (match) return match;
     }
-    // Prefer an English voice if no explicit choice.
-    return voices.find((v) => v.lang?.startsWith("en")) ?? voices[0] ?? null;
+    // Prefer Mandarin for this Chinese desktop trial.
+    return voices.find((v) => /^zh[-_](CN|Hans)/i.test(v.lang))
+      ?? voices.find((v) => v.lang?.startsWith("zh")) ?? voices[0] ?? null;
   }
 
   enqueue(text: string) {

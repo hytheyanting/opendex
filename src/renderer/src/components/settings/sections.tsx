@@ -205,6 +205,7 @@ function VoiceInputSection({ data, setConfig, setSecret }: SectionProps) {
             hint="Whisper-local and Vosk-local are free and offline (one-time model download)."
             value={config.voiceInput.sttProvider}
             options={[
+              { value: "sensevoice", label: "Ubuntu SenseVoice（中文 · NetBird 内网）" },
               { value: "whisper-local", label: "Local Whisper (free, offline)" },
               { value: "vosk-local", label: "Local Vosk (free, offline, fast)" },
               { value: "openai", label: "OpenAI Whisper (cloud)" },
@@ -212,6 +213,9 @@ function VoiceInputSection({ data, setConfig, setSecret }: SectionProps) {
             ]}
             onChange={(v) => setConfig({ voiceInput: { ...config.voiceInput, sttProvider: v } })}
           />
+          {config.voiceInput.sttProvider === "sensevoice" && (
+            <p className="text-xs text-muted-foreground">请保持 NetBird 已连接。语音在 Ubuntu 本地转写，不需要转写 API 密钥。</p>
+          )}
           {config.voiceInput.sttProvider === "openai" && (
             <SecretField
               label="OpenAI API key"

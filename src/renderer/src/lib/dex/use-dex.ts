@@ -16,6 +16,7 @@ import {
 import { AudioMeter } from "./audio-meter";
 import { vlog } from "./voice-timing";
 import { CloudSttEngine } from "./engines/cloud-stt";
+import { hasCommandWords } from "./command-text";
 import { RealtimeVoiceSession } from "./realtime/realtime-session";
 import type { SttEngine, WakeEngine } from "./engines/types";
 import type { DexStatus, TranscriptTurn } from "./state";
@@ -369,8 +370,8 @@ export function useDex(options: UseDexOptions): UseDexResult {
       }
       sttEngineRef.current?.engine.dispose();
       let engine: SttEngine;
-      if (provider === "openai") {
-        engine = new CloudSttEngine("openai");
+      if (provider === "openai" || provider === "sensevoice") {
+        engine = new CloudSttEngine(provider);
       } else if (provider === "whisper-local") {
         const { WhisperSttEngine } = await import("./engines/whisper-stt");
         engine = new WhisperSttEngine(whisperModel, (p) =>
@@ -1207,7 +1208,7 @@ export function useDex(options: UseDexOptions): UseDexResult {
             const cleaned = text.trim();
             // Empty, or no real words (Whisper can hallucinate "." / "♪" from
             // noise) → ignore and go back to waiting.
-            if (!cleaned || !/[a-z0-9]/i.test(cleaned)) {
+            if (!hasCommandWords(cleaned)) {
               startModeRef.current?.("wake");
               return;
             }

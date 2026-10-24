@@ -9,7 +9,7 @@ export type UserGender = "male" | "female" | "unspecified";
 export type WakeMode = "webspeech" | "manual" | "vosk";
 /** Window layout: the full themed experience, or a slim top-pinned bar. */
 export type WindowMode = "full" | "notch";
-export type SttProvider = "webspeech" | "openai" | "whisper-local" | "vosk-local";
+export type SttProvider = "webspeech" | "openai" | "whisper-local" | "vosk-local" | "sensevoice";
 /** How the voice session runs: `pipeline` = wake → STT → LLM → TTS (separate
  *  engines, free/local options); `realtime` = one speech-to-speech model over a
  *  WebSocket (most natural voice, needs a gateway key). */
@@ -138,13 +138,13 @@ export interface PublicConfig {
 
 export const DEFAULT_CONFIG: OpenDexConfig = {
   version: 1,
-  assistant: { name: "Dex", wakeWord: "dex", userGender: "unspecified", persona: "" },
+  assistant: { name: "Dex", wakeWord: "dex", userGender: "unspecified", persona: "你是我的桌面操作助手。使用简体中文简洁回答。只执行明确要求的任务，重要操作先确认；遇到登录、密码或系统授权时请用户完成。" },
   // Defaults to the gateway so configs written before the provider field
   // (which only had `llm.model`) keep working after upgrade. First-run
   // onboarding forces an explicit choice regardless.
   llm: { provider: "gateway", model: "anthropic/claude-sonnet-4-6" },
   tts: {
-    engine: "elevenlabs",
+    engine: "system",
     elevenLabs: { voiceId: "JBFqnCBsd6RMkjVDRZzb", modelId: "eleven_turbo_v2_5" },
     system: { voiceURI: null, rate: 1, pitch: 1 },
   },
@@ -163,9 +163,9 @@ export const DEFAULT_CONFIG: OpenDexConfig = {
     idleDisconnectSec: 10,
   },
   voiceInput: {
-    // Free, offline defaults: Vosk wake word + local Whisper transcription.
-    wakeMode: "vosk",
-    sttProvider: "whisper-local",
+    // This local trial uses the existing private Ubuntu transcription service.
+    wakeMode: "manual",
+    sttProvider: "sensevoice",
     whisperModel: "Xenova/whisper-base.en",
   },
   appearance: { theme: "editorial", showToolActivity: true },
@@ -180,7 +180,7 @@ export const DEFAULT_CONFIG: OpenDexConfig = {
   },
   computer: { animateCursor: true },
   // Anonymous usage analytics, on by default (opt-out in onboarding/Settings).
-  analytics: { enabled: true },
+  analytics: { enabled: false },
   onboarding: { completed: false },
 };
 
