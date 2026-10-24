@@ -21,6 +21,7 @@ const PROVIDER_ICON: Record<LlmProvider, LucideIcon> = {
   anthropic: KeyRound,
   xai: KeyRound,
   gateway: Network,
+  compatible: Network,
   opendex: Cloud,
 };
 
@@ -49,6 +50,12 @@ export function isProviderReady(
   if (!meta || meta.comingSoon) return false;
   if (meta.auth === "none") return provider === "apple" ? apple.available : true;
   if (meta.auth === "account") return false;
+  if (provider === "compatible") {
+    try {
+      const url = new URL(data.config.llm.baseURL ?? "");
+      if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash) return false;
+    } catch { return false; }
+  }
   // key auth: needs the secret present and a model chosen.
   return Boolean(meta.secretName && data.secrets[meta.secretName] && data.config.llm.model);
 }
@@ -244,6 +251,17 @@ function ProviderConfig({
 
   return (
     <div className="flex flex-col gap-3 border-t border-border pt-3">
+      {meta.id === "compatible" && (
+        <>
+          <TextField
+            label="API Base URL"
+            hint="填写 HTTPS 接口地址，包含 /v1；密钥单独填写。"
+            value={data.config.llm.baseURL ?? "https://openapi.coreshub.cn/v1"}
+            onChange={(baseURL) => setConfig({ llm: { baseURL } })}
+          />
+          <p className="text-xs text-muted-foreground">{meta.note}</p>
+        </>
+      )}
       {meta.id === "apple" ? (
         <p className="text-xs text-muted-foreground">
           {apple.available

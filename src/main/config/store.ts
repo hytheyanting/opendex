@@ -136,6 +136,7 @@ function secretsPresence(): SecretsPresence {
     OPENAI_API_KEY: hasSecret("OPENAI_API_KEY"),
     ANTHROPIC_API_KEY: hasSecret("ANTHROPIC_API_KEY"),
     XAI_API_KEY: hasSecret("XAI_API_KEY"),
+    COMPATIBLE_API_KEY: hasSecret("COMPATIBLE_API_KEY"),
   };
 }
 

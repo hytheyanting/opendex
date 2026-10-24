@@ -1,3 +1,4 @@
+import { createCompatibleModel } from "./compatible-model";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createXai } from "@ai-sdk/xai";
@@ -22,6 +23,12 @@ export interface AppleAvailability {
 export async function resolveModel(config: OpenDexConfig): Promise<LanguageModel> {
   const { provider, model } = config.llm;
   switch (provider) {
+    case "compatible":
+      return createCompatibleModel({
+        apiKey: process.env.COMPATIBLE_API_KEY ?? "",
+        baseURL: config.llm.baseURL ?? "https://openapi.coreshub.cn/v1",
+        model,
+      });
     case "openai":
       if (!process.env.OPENAI_API_KEY) throw new Error("no OpenAI API key is set");
       return createOpenAI({ apiKey: process.env.OPENAI_API_KEY })(model);

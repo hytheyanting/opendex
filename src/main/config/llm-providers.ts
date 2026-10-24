@@ -39,6 +39,17 @@ export interface LlmProviderMeta {
 
 export const LLM_PROVIDERS: LlmProviderMeta[] = [
   {
+    id: "compatible",
+    label: "CoreHub / OpenAI 兼容",
+    blurb: "自定义 HTTPS 地址，使用该服务的 API 密钥。",
+    kind: "byok",
+    auth: "key",
+    secretName: "COMPATIBLE_API_KEY",
+    supportsTools: true,
+    models: [{ id: "Kimi-K2.5", label: "Kimi-K2.5" }],
+    note: "桌面截图和指令会发送至此地址。模型需支持图片与工具调用，服务端能力需实际测试确认。",
+  },
+  {
     id: "opendex",
     label: "OpenDex",
     blurb: "A simple, private and secure subscription service.",

@@ -22,7 +22,7 @@ export type RealtimeProvider = "gateway" | "openai";
  *  `openai`/`anthropic`/`xai` are bring-your-own-key; `gateway` is the Vercel AI
  *  Gateway (one key, any provider); `opendex` is our hosted subscription
  *  (reserved — not implemented yet). */
-export type LlmProvider = "apple" | "openai" | "anthropic" | "xai" | "gateway" | "opendex";
+export type LlmProvider = "apple" | "openai" | "anthropic" | "xai" | "gateway" | "opendex" | "compatible";
 /** How a provider authenticates: `none` (local), `key` (user-pasted secret), or
  *  `account` (a session we manage — reserved for the OpenDex subscription). */
 export type ProviderAuth = "none" | "key" | "account";
@@ -32,7 +32,8 @@ export type SecretName =
   | "TAVILY_API_KEY"
   | "OPENAI_API_KEY"
   | "ANTHROPIC_API_KEY"
-  | "XAI_API_KEY";
+  | "XAI_API_KEY"
+  | "COMPATIBLE_API_KEY";
 
 export interface OpenDexConfig {
   version: 1;
@@ -54,6 +55,7 @@ export interface OpenDexConfig {
      *  ("anthropic/claude-sonnet-4-6"), bare id for direct providers
      *  ("gpt-5"), ignored for apple (single on-device model). */
     model: string;
+    baseURL?: string;
   };
   tts: {
     engine: TtsEngine;
@@ -126,6 +128,7 @@ export interface SecretsPresence {
   OPENAI_API_KEY: boolean;
   ANTHROPIC_API_KEY: boolean;
   XAI_API_KEY: boolean;
+  COMPATIBLE_API_KEY: boolean;
 }
 
 /** What the renderer receives — config plus which secrets are set (never the values). */
@@ -142,7 +145,7 @@ export const DEFAULT_CONFIG: OpenDexConfig = {
   // Defaults to the gateway so configs written before the provider field
   // (which only had `llm.model`) keep working after upgrade. First-run
   // onboarding forces an explicit choice regardless.
-  llm: { provider: "gateway", model: "anthropic/claude-sonnet-4-6" },
+  llm: { provider: "gateway", model: "anthropic/claude-sonnet-4-6", baseURL: "https://openapi.coreshub.cn/v1" },
   tts: {
     engine: "system",
     elevenLabs: { voiceId: "JBFqnCBsd6RMkjVDRZzb", modelId: "eleven_turbo_v2_5" },
@@ -191,6 +194,7 @@ export const SECRET_NAMES: SecretName[] = [
   "OPENAI_API_KEY",
   "ANTHROPIC_API_KEY",
   "XAI_API_KEY",
+  "COMPATIBLE_API_KEY",
 ];
 
 /** Deep-merge a partial patch into a config (one level of nesting is enough here). */
