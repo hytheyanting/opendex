@@ -26,6 +26,7 @@ import {
   TextArea,
   TextField,
 } from "../ui/fields";
+import { SystemVoicePreview } from "./system-voice-preview";
 import { useSystemVoices } from "@/lib/use-system-voices";
 import {
   REALTIME_MODELS,
@@ -467,6 +468,7 @@ function TtsSection({ data, setConfig, setSecret }: SectionProps) {
           />
         </>
       ) : (
+        <>
         <SelectField
           label="System voice"
           hint={voices.length ? undefined : "Loading available voices…"}
@@ -479,6 +481,8 @@ function TtsSection({ data, setConfig, setSecret }: SectionProps) {
             setConfig({ tts: { system: { ...config.tts.system, voiceURI: v || null } } })
           }
         />
+        <SystemVoicePreview options={config.tts.system} />
+        </>
       )}
     </>
   );

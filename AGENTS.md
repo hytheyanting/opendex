@@ -88,3 +88,10 @@ OpenDex is an **Electron** desktop app (electron-vite + React + Tailwind v4). It
 
 ## Status
 Phases 1–4 done (4a cloud/web + 4b free offline); **5a done** (skills + permission gate + Open built-in); **6 done** (computer-use: screen capture + mouse/keyboard, gated & opt-in); **7 done** (always-on visibility: overlay HUD + notch mode + summon hotkey + tray, hide-not-close window model). Roadmap: 5b MCP + more built-ins → signed releases + auto-update.
+
+## User fork and rollback workflow
+
+- User fork: https://github.com/hytheyanting/opendex (`origin`). Keep all custom changes committed and pushed to this fork on `feat/ubuntu-sensevoice` unless the user chooses another branch.
+- Original project is `upstream` (fetch only); its push URL is deliberately disabled. Do not push custom work to wassgha/opendex.
+- Keep changes in scoped commits and create rollback tags before installing material updates. Never force-push or rewrite published history without explicit instruction.
+- Before voice preview: tag `trial-before-voice-preview-20261024`. API keys and user runtime settings stay outside Git; never commit credentials.

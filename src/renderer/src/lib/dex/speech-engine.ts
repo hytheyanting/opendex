@@ -1,3 +1,4 @@
+import { resolveSystemVoice, systemUtterance } from "./system-voice";
 import { TtsPlayer } from "./tts-player";
 
 // Common interface for spoken output, so the orchestrator (use-dex) is
@@ -50,13 +51,7 @@ export class SystemSpeechEngine implements SpeechEngine {
 
   private pickVoice(): SpeechSynthesisVoice | null {
     const voices = window.speechSynthesis.getVoices();
-    if (this.opts.voiceURI) {
-      const match = voices.find((v) => v.voiceURI === this.opts.voiceURI);
-      if (match) return match;
-    }
-    // Prefer Mandarin for this Chinese desktop trial.
-    return voices.find((v) => /^zh[-_](CN|Hans)/i.test(v.lang))
-      ?? voices.find((v) => v.lang?.startsWith("zh")) ?? voices[0] ?? null;
+    return resolveSystemVoice(voices, this.opts.voiceURI) ?? resolveSystemVoice(voices, null);
   }
 
   enqueue(text: string) {
@@ -64,14 +59,7 @@ export class SystemSpeechEngine implements SpeechEngine {
     if (!trimmed) return;
     this.stopped = false;
 
-    const utterance = new SpeechSynthesisUtterance(trimmed);
-    const voice = this.pickVoice();
-    if (voice) {
-      utterance.voice = voice;
-      utterance.lang = voice.lang;
-    }
-    utterance.rate = this.opts.rate;
-    utterance.pitch = this.opts.pitch;
+    const utterance = systemUtterance(trimmed, this.pickVoice(), this.opts);
 
     this.pending += 1;
     if (!this.speaking) {
