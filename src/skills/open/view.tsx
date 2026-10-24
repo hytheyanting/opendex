@@ -27,3 +27,8 @@ registerToolView({
     label: `Open ${truncate(String((input as { path?: unknown })?.path ?? ""))}`,
   }),
 });
+
+registerToolView({
+  name: TOOLS.quitApp,
+  label: (input) => ({ icon: "⏹️", label: `Quit ${truncate(String((input as { name?: unknown })?.name ?? ""))}` }),
+});

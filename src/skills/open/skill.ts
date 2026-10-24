@@ -1,3 +1,4 @@
+import { quitApp } from "./quit-app";
 import { spawn } from "node:child_process";
 import { shell } from "electron";
 import { z } from "zod";
@@ -42,7 +43,15 @@ function launchApp(name: string): Promise<{ ok: true } | { error: string }> {
 
 export const openSkill: Skill = {
   ...meta,
+  systemPrompt: "To quit/exit a named application on macOS, prefer quitApp over screenshot or keyboard control. Closing only a window differs from quitting the app: use quitApp when the user wants the application to exit. Never claim it exited if the tool reports still running or an error.",
   tools: [
+    {
+      name: TOOLS.quitApp,
+      description: "Normally quit/exit a running macOS application by its exact name or bundle ID (Calculator = 计算器). Does not launch absent apps or force quit. An app may ask the user to save changes. Use for requests to close/quit an application; not for closing just one document/window.",
+      inputSchema: z.object({ name: z.string().min(1).max(256).describe("Exact installed app name, e.g. Calculator, or bundle ID, e.g. com.apple.calculator.") }),
+      summarize: (i) => `Quit app normally: ${(i as { name: string }).name}`,
+      execute: async ({ name }: { name: string }) => quitApp(name),
+    },
     {
       name: TOOLS.openUrl,
       description: "Open a URL in the user's default web browser.",
