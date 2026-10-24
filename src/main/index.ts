@@ -39,6 +39,7 @@ import {
   setPermissionUi,
   type PermissionDecision,
 } from "./agent/permissions";
+import { listLocalVoices, synthesizeLocal } from "./tts/local-studio";
 import { synthesizeSpeech } from "./tts/elevenlabs";
 import { transcribe } from "./stt";
 import {
@@ -592,8 +593,16 @@ function registerIpc() {
     inFlight.delete(requestId);
   });
 
+  ipcMain.handle(IPC.localVoices, () => listLocalVoices());
+  ipcMain.handle(IPC.localSynthesize, async (_event, text: string, voiceId: string) => {
+    const buffer = await synthesizeLocal(text, voiceId);
+    return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer;
+  });
   ipcMain.handle(IPC.ttsSynthesize, async (_event, text: string) => {
-    const buffer = await synthesizeSpeech(text);
+    const c = getConfig();
+    const buffer = c.tts.engine === "local-studio"
+      ? await synthesizeLocal(text, c.tts.localStudio.voiceId)
+      : await synthesizeSpeech(text);
     return buffer.buffer.slice(
       buffer.byteOffset,
       buffer.byteOffset + buffer.byteLength,

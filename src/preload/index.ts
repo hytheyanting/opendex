@@ -104,6 +104,12 @@ const opendex = {
     };
   },
 
+  async localVoices(): Promise<{ id: string; name: string }[]> {
+    return ipcRenderer.invoke(IPC.localVoices);
+  },
+  async synthesizeLocal(text: string, voiceId: string): Promise<ArrayBuffer> {
+    return ipcRenderer.invoke(IPC.localSynthesize, text, voiceId);
+  },
   /** Synthesise a sentence to MP3 bytes for playback in the renderer. */
   async synthesize(text: string): Promise<ArrayBuffer> {
     return ipcRenderer.invoke(IPC.ttsSynthesize, text);

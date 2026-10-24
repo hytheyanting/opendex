@@ -26,6 +26,7 @@ import {
   TextArea,
   TextField,
 } from "../ui/fields";
+import { LocalStudioVoices } from "./local-studio-voices";
 import { SystemVoicePreview } from "./system-voice-preview";
 import { useSystemVoices } from "@/lib/use-system-voices";
 import {
@@ -441,10 +442,13 @@ function TtsSection({ data, setConfig, setSecret }: SectionProps) {
         options={[
           { value: "elevenlabs", label: "ElevenLabs" },
           { value: "system", label: "System voice" },
+          { value: "local-studio", label: "本机克隆音色" },
         ]}
         onChange={(v) => setConfig({ tts: { engine: v } })}
       />
-      {config.tts.engine === "elevenlabs" ? (
+      {config.tts.engine === "local-studio" ? (
+        <LocalStudioVoices voiceId={config.tts.localStudio.voiceId} onChange={(voiceId) => setConfig({ tts: { localStudio: { voiceId } } })} />
+      ) : config.tts.engine === "elevenlabs" ? (
         <>
           <SecretField
             label="ElevenLabs API key"

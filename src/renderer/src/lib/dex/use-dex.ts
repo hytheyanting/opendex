@@ -1413,6 +1413,7 @@ export function useDex(options: UseDexOptions): UseDexResult {
             // waitForDrain, which is responsible for the next status.
           },
           onAudioBlocked: () => setAudioBlocked(true),
+          onError: (message) => setLiveCaption(`语音生成失败：${message}`),
           onChunkStart: (text) => {
             setSpokenCaption((prev) => {
               if (spokenFreshRef.current) {

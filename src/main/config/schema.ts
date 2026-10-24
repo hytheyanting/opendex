@@ -1,7 +1,7 @@
 // Shared config types + defaults. Imported by the main process (store) and,
 // for types only, by the preload/renderer through the IPC layer.
 
-export type TtsEngine = "elevenlabs" | "system";
+export type TtsEngine = "elevenlabs" | "system" | "local-studio";
 export type GreetingMode = "example" | "custom" | "none";
 /** How the assistant addresses the user. Drives honorifics ("sir"/"ma'am") and
  *  is "unspecified" by default so we never presume a gender. */
@@ -59,6 +59,7 @@ export interface OpenDexConfig {
   };
   tts: {
     engine: TtsEngine;
+    localStudio: { voiceId: string };
     elevenLabs: { voiceId: string; modelId: string };
     system: { voiceURI: string | null; rate: number; pitch: number };
   };
@@ -148,6 +149,7 @@ export const DEFAULT_CONFIG: OpenDexConfig = {
   llm: { provider: "gateway", model: "anthropic/claude-sonnet-4-6", baseURL: "https://openapi.coreshub.cn/v1" },
   tts: {
     engine: "system",
+    localStudio: { voiceId: "" },
     elevenLabs: { voiceId: "JBFqnCBsd6RMkjVDRZzb", modelId: "eleven_turbo_v2_5" },
     system: { voiceURI: null, rate: 1, pitch: 1 },
   },

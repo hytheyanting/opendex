@@ -14,6 +14,7 @@ export interface SpeechEngine {
 export interface SpeechEngineCallbacks {
   onStateChange: (speaking: boolean) => void;
   onAudioBlocked: () => void;
+  onError?: (message: string) => void;
   /** Fires when a queued chunk actually *starts* being spoken (not when it's
    *  enqueued). Lets the UI track spoken progress, which lags the model's much
    *  faster token stream. */
@@ -26,7 +27,7 @@ export interface SystemVoiceOptions {
   pitch: number;
 }
 
-export type SpeechEngineKind = "elevenlabs" | "system";
+export type SpeechEngineKind = "elevenlabs" | "system" | "local-studio";
 
 /**
  * System TTS via the renderer's SpeechSynthesis API. Sentences are spoken in
@@ -109,5 +110,5 @@ export function createSpeechEngine(opts: CreateSpeechEngineOptions): SpeechEngin
   if (opts.kind === "system") {
     return new SystemSpeechEngine(opts.callbacks, opts.system);
   }
-  return new TtsPlayer(opts.callbacks);
+  return new TtsPlayer(opts.callbacks, opts.kind === "local-studio");
 }
